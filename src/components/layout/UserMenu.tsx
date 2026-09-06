@@ -45,11 +45,9 @@ export function UserMenu({ user }: UserMenuProps) {
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-3 p-1.5 pr-3 rounded-full hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200 focus:outline-none cursor-pointer"
       >
-        <img
-          src={user.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=256'}
-          alt={user.full_name}
-          className="w-9 h-9 rounded-full object-cover ring-2 ring-indigo-500/20"
-        />
+        <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold flex items-center justify-center shadow-xs ring-2 ring-indigo-500/20 shrink-0">
+          <User className="w-4.5 h-4.5 text-white stroke-[2.2]" />
+        </div>
         <div className="hidden md:flex flex-col text-left">
           <span className="text-sm font-semibold text-slate-800 leading-snug">{user.full_name}</span>
           <span className="text-xs text-slate-400 font-normal truncate max-w-[120px]">{user.email}</span>

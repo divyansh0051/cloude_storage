@@ -20,10 +20,10 @@ export function FileCard({ file, handlers, onSelect }: FileCardProps) {
   return (
     <div
       onClick={onSelect || handlers.onDetails || handlers.onOpen}
-      className="group relative bg-white rounded-2xl border border-slate-200/80 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer select-none flex flex-col overflow-hidden"
+      className="group relative bg-white rounded-2xl border border-slate-200/80 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer select-none flex flex-col hover:z-20"
     >
       {/* Thumbnail or Preview Area */}
-      <div className="h-36 bg-slate-50 relative flex items-center justify-center border-b border-slate-100 overflow-hidden group-hover:bg-slate-100/50 transition-colors">
+      <div className="h-36 bg-slate-50 relative flex items-center justify-center border-b border-slate-100 rounded-t-2xl overflow-hidden group-hover:bg-slate-100/50 transition-colors">
         {hasPreview ? (
           <img
             src={file.preview_url}
@@ -59,7 +59,7 @@ export function FileCard({ file, handlers, onSelect }: FileCardProps) {
       </div>
 
       {/* File Metadata Header */}
-      <div className="p-4 flex items-start justify-between gap-2">
+      <div className="p-4 flex items-start justify-between gap-2 relative">
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-semibold text-slate-800 group-hover:text-indigo-600 transition-colors truncate">
             {file.name}
@@ -71,7 +71,7 @@ export function FileCard({ file, handlers, onSelect }: FileCardProps) {
           </div>
         </div>
 
-        <div onClick={(e) => e.stopPropagation()}>
+        <div onClick={(e) => e.stopPropagation()} className="relative z-30">
           <FileContextMenu
             isStarred={file.is_starred}
             isDeleted={file.is_deleted}

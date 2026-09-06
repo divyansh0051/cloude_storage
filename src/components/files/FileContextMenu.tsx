@@ -62,7 +62,7 @@ export function FileContextMenu({ isStarred, isDeleted, handlers }: FileContextM
       {isOpen && (
         <div
           onClick={(e) => e.stopPropagation()}
-          className="absolute right-0 mt-1 w-48 bg-white rounded-2xl shadow-xl border border-slate-100 py-1.5 z-50 animate-scale-up text-xs font-medium"
+          className="absolute right-0 top-full mt-1 w-48 bg-white rounded-2xl shadow-2xl border border-slate-200/90 py-1.5 z-[100] animate-scale-up text-xs font-medium"
         >
           {isDeleted ? (
             <>

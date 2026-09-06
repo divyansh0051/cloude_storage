@@ -79,6 +79,12 @@ export interface LinkShare {
   created_by: string;
   created_at: string;
   url?: string;
+  file_name?: string;
+  file_size_bytes?: number;
+  file_mime_type?: string;
+  file_download_url?: string;
+  file_preview_url?: string;
+  owner_name?: string;
 }
 
 export interface StarItem {

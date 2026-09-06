@@ -16,32 +16,39 @@ export default function PublicSharePage() {
   const [passwordInput, setPasswordInput] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const linkShare = storage.getLinkShare(token) || {
-    id: 'link_1',
-    resource_type: 'file',
-    resource_id: 'file_cloudvault_hero',
-    token: token || 'cv_pub_demo_98234a',
-    role: 'viewer',
-    has_password: false,
-    created_by: 'user_1234567890',
-    created_at: new Date().toISOString(),
-  };
+  const linkShare = storage.getLinkShare(token);
+  const allFiles = storage.getFiles(true);
+  const matchedFile = allFiles.find((f) => f.id === linkShare?.resource_id);
+  const latestFile = allFiles.length > 0 ? allFiles[0] : null;
 
-  const file = storage.getFiles(true).find((f) => f.id === linkShare.resource_id) || {
-    id: 'file_cloudvault_hero',
-    name: 'CloudVault_App_Preview.png',
-    mime_type: 'image/png',
-    size_bytes: 3450000,
+  const file = matchedFile || (linkShare ? {
+    id: linkShare.resource_id || 'shared_file',
+    name: linkShare.file_name || latestFile?.name || 'Shared Document.pdf',
+    mime_type: linkShare.file_mime_type || latestFile?.mime_type || 'application/pdf',
+    size_bytes: linkShare.file_size_bytes || latestFile?.size_bytes || 1024000,
     storage_key: '',
-    owner_id: 'user_1234567890',
+    owner_id: linkShare.created_by || 'user',
+    folder_id: null,
+    is_deleted: false,
+    created_at: linkShare.created_at || new Date().toISOString(),
+    updated_at: linkShare.created_at || new Date().toISOString(),
+    download_url: linkShare.file_download_url || latestFile?.download_url || '#',
+    preview_url: linkShare.file_preview_url || latestFile?.preview_url,
+    owner_name: linkShare.owner_name || latestFile?.owner_name || 'User',
+  } : (latestFile || {
+    id: 'shared_file',
+    name: 'Shared Document.pdf',
+    mime_type: 'application/pdf',
+    size_bytes: 1024000,
+    storage_key: '',
+    owner_id: 'user',
     folder_id: null,
     is_deleted: false,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-    download_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200',
-    preview_url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=1200',
+    download_url: '#',
     owner_name: 'User',
-  };
+  }));
 
   const isExpired = linkShare.expires_at ? new Date(linkShare.expires_at) < new Date() : false;
   const requiresPassword = linkShare.has_password && !isAuthenticated;

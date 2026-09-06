@@ -416,6 +416,10 @@ class StorageManager {
   createLinkShare(resourceType: 'file' | 'folder', resourceId: string, options?: { expiresAt?: string; password?: string }): LinkShare {
     const user = this.getUser();
     const token = `cv_pub_${generateToken(16)}`;
+
+    const targetFile = resourceType === 'file' ? this.getFiles(true).find(f => f.id === resourceId) : null;
+    const targetFolder = resourceType === 'folder' ? this.getFolders(true).find(f => f.id === resourceId) : null;
+
     const newLink: LinkShare = {
       id: `link_${Date.now()}`,
       resource_type: resourceType,
@@ -428,6 +432,12 @@ class StorageManager {
       created_by: user.id,
       created_at: new Date().toISOString(),
       url: typeof window !== 'undefined' ? `${window.location.origin}/share/${token}` : `http://localhost:3000/share/${token}`,
+      file_name: targetFile?.name || targetFolder?.name || 'Shared Item',
+      file_size_bytes: targetFile?.size_bytes || 0,
+      file_mime_type: targetFile?.mime_type || (resourceType === 'folder' ? 'folder' : 'application/pdf'),
+      file_download_url: targetFile?.download_url || '#',
+      file_preview_url: targetFile?.preview_url || targetFile?.download_url,
+      owner_name: user.full_name || 'User',
     };
 
     const stored = localStorage.getItem(STORAGE_KEYS.LINK_SHARES);

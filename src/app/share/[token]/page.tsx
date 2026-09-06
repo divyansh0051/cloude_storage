@@ -50,8 +50,8 @@ export default function PublicSharePage() {
     owner_name: 'User',
   }));
 
-  const isExpired = linkShare.expires_at ? new Date(linkShare.expires_at) < new Date() : false;
-  const requiresPassword = linkShare.has_password && !isAuthenticated;
+  const isExpired = linkShare?.expires_at ? new Date(linkShare.expires_at) < new Date() : false;
+  const requiresPassword = (linkShare?.has_password ?? false) && !isAuthenticated;
 
   const handlePasswordSubmit = (e: React.FormEvent) => {
     e.preventDefault();

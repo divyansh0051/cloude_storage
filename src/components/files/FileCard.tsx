@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { FileItem } from '@/types';
 import { FileTypeIcon } from './FileTypeIcon';
 import { FileContextMenu, ActionHandlers } from './FileContextMenu';
@@ -14,13 +14,16 @@ interface FileCardProps {
 }
 
 export function FileCard({ file, handlers, onSelect }: FileCardProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isImage = file.mime_type.startsWith('image/');
   const hasPreview = isImage && file.preview_url;
 
   return (
     <div
       onClick={onSelect || handlers.onDetails || handlers.onOpen}
-      className="group relative bg-white rounded-2xl border border-slate-200/80 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer select-none flex flex-col hover:z-20"
+      className={`group relative bg-white rounded-2xl border border-slate-200/80 hover:border-indigo-300 hover:shadow-lg transition-all cursor-pointer select-none flex flex-col ${
+        isMenuOpen ? 'z-[60] shadow-2xl border-indigo-400 ring-2 ring-indigo-500/20' : 'z-10 hover:z-20'
+      }`}
     >
       {/* Thumbnail or Preview Area */}
       <div className="h-36 bg-slate-50 relative flex items-center justify-center border-b border-slate-100 rounded-t-2xl overflow-hidden group-hover:bg-slate-100/50 transition-colors">
@@ -76,6 +79,7 @@ export function FileCard({ file, handlers, onSelect }: FileCardProps) {
             isStarred={file.is_starred}
             isDeleted={file.is_deleted}
             handlers={handlers}
+            onMenuToggle={setIsMenuOpen}
           />
         </div>
       </div>

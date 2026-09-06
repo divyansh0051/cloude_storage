@@ -15,6 +15,7 @@ interface FolderCardProps {
 
 export function FolderCard({ folder, handlers }: FolderCardProps) {
   const router = useRouter();
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   const handleOpen = () => {
     if (handlers.onOpen) {
@@ -27,7 +28,9 @@ export function FolderCard({ folder, handlers }: FolderCardProps) {
   return (
     <div
       onClick={handleOpen}
-      className="group relative bg-white rounded-2xl p-4 border border-slate-200/80 hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer select-none flex flex-col justify-between"
+      className={`group relative bg-white rounded-2xl p-4 border border-slate-200/80 hover:border-indigo-300 hover:shadow-md transition-all cursor-pointer select-none flex flex-col justify-between ${
+        isMenuOpen ? 'z-[60] shadow-2xl border-indigo-400 ring-2 ring-indigo-500/20' : 'z-10 hover:z-20'
+      }`}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-3 min-w-0">
@@ -55,6 +58,7 @@ export function FolderCard({ folder, handlers }: FolderCardProps) {
               ...handlers,
               onOpen: handleOpen,
             }}
+            onMenuToggle={setIsMenuOpen}
           />
         </div>
       </div>

@@ -30,29 +30,43 @@ interface FileContextMenuProps {
   isStarred?: boolean;
   isDeleted?: boolean;
   handlers: ActionHandlers;
+  onMenuToggle?: (isOpen: boolean) => void;
 }
 
-export function FileContextMenu({ isStarred, isDeleted, handlers }: FileContextMenuProps) {
+export function FileContextMenu({ isStarred, isDeleted, handlers, onMenuToggle }: FileContextMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [openUpward, setOpenUpward] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const toggleMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!isOpen && menuRef.current) {
+      const rect = menuRef.current.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      setOpenUpward(spaceBelow < 220);
+    }
+    const nextState = !isOpen;
+    setIsOpen(nextState);
+    onMenuToggle?.(nextState);
+  };
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setIsOpen(false);
+        onMenuToggle?.(false);
       }
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  }, [onMenuToggle]);
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative inline-block text-left" ref={menuRef}>
       <button
-        onClick={(e) => {
-          e.stopPropagation();
-          setIsOpen(!isOpen);
-        }}
+        type="button"
+        onClick={toggleMenu}
         className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
         aria-label="More options"
       >
@@ -61,8 +75,13 @@ export function FileContextMenu({ isStarred, isDeleted, handlers }: FileContextM
 
       {isOpen && (
         <div
-          onClick={(e) => e.stopPropagation()}
-          className="absolute right-0 top-full mt-1 w-48 bg-white rounded-2xl shadow-2xl border border-slate-200/90 py-1.5 z-[100] animate-scale-up text-xs font-medium"
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          className={`absolute right-0 ${
+            openUpward ? 'bottom-full mb-1 origin-bottom-right' : 'top-full mt-1 origin-top-right'
+          } w-48 bg-white rounded-2xl shadow-2xl border border-slate-200/90 py-1.5 z-[100] animate-scale-up text-xs font-medium`}
         >
           {isDeleted ? (
             <>
